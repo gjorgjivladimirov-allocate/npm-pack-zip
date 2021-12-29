@@ -27,6 +27,10 @@ const argv = require('yargs')
     alias: 'v',
     default: false,
   })
+  .option('static-date-modified', {
+    alias: 'sdm',
+    default: false,
+  })
   .argv;
 
 const source = argv.source;
@@ -34,7 +38,8 @@ const destination = argv.destination;
 const info = argv.info;
 const verbose = argv.verbose;
 const addVersion = argv.addVersion;
-pack({source, destination, info, verbose, addVersion})
+const staticDateModified = argv.staticDateModified;
+pack({source, destination, info, verbose, addVersion, staticDateModified})
   .then(() => process.exit(0))
   .catch(error => {
     console.error(error);

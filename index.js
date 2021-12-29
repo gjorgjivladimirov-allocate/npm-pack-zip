@@ -20,23 +20,23 @@ function getDefaultOutputFilename({ cwd, addVersion }) {
     return getPackageInfo(packageFile).then(packageInfo => `${sanitize(packageInfo.name)}${(addVersion) ? '-'+sanitize(packageInfo.version) : ''}.zip`);
 };
 
-function zipFiles(files, filename, source, destination, info, verbose) {
+function zipFiles(files, filename, source, destination, info, verbose, staticDateModified) {
     const target = path.join(destination, filename);
     if (info)
-        console.log(`Archive: ${target}`);
+        console.log(`Archive: ${target} with staticDateModifiedFlag: ${String(staticDateModified)}`);
 
     let archive = archiver(target);
     files.forEach(file => {
         const filePath = path.join(source, file);
         if (verbose)
             console.log(file);
-        archive.file(filePath, { name: file });
+        archive.file(filePath, { name: file, date: staticDateModified ? new Date(2000, 0) : void 0 });
     });
 
     return archive.finalize();
 };
 
-function pack({ source, destination, info, verbose, addVersion }) {
+function pack({ source, destination, info, verbose, addVersion, staticDateModified }) {
     return packlist({ path: source })
         .then(files => {
             return getDefaultOutputFilename({ cwd: source, addVersion })
@@ -44,7 +44,7 @@ function pack({ source, destination, info, verbose, addVersion }) {
                     if (destination && !fs.existsSync(destination)){
                         fs.mkdirSync(destination);
                     }
-                    return zipFiles(files, filename, source, destination, info, verbose);
+                    return zipFiles(files, filename, source, destination, info, verbose, staticDateModified);
                 });
         });
 };

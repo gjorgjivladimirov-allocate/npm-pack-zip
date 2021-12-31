@@ -34,3 +34,20 @@ Create the .zip file containing _my-lambda_ and its dependencies, ready to uploa
 ```
 npm run pack
 ```
+
+### Static date modified of the files inside the zip
+If you need to create `*.zip` package with static date modified of the files inside then you can use the flag `--static-date-modified` . This can be used if you are using automation deployment to the AWS, where the server checkouts the code (brand new) each time deployment is triggered. Hash can be calculated so that you can check with the hash in AWS so that you can check if the code is changed.
+
+```
+"scripts": {
+    "pack": "npm-pack-zip --static-date-modified"
+    ...
+}
+```
+
+```
+"scripts": {
+    "pack": "npm-pack-zip --sdm"
+    ...
+}
+```
